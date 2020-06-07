@@ -2,6 +2,7 @@ package com.ivnygema.damas.screens;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,12 +15,15 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.ivnygema.damas.managers.ResourceManager;
+import com.ivnygema.damas.models.Casilla;
 import com.ivnygema.damas.models.Piece;
 
 import static com.ivnygema.damas.util.Constantes.*;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, InputProcessor {
 
     // TiledMap
     private Batch batch;
@@ -28,11 +32,10 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     //
-    Array<Piece> blancas;
-    Array<Piece> negras;
-
     Piece [][] piezasTablero = new Piece[8][8];
-    Piece [][] casillasTablero = new Piece[8][8];
+    Casilla[][] casillasTablero = new Casilla[8][8];
+
+    protected int auxi = 0,auxj = 0;
 
     @Override
     public void show() {
@@ -46,12 +49,13 @@ public class GameScreen implements Screen {
         batch = renderer.getBatch();
 
         //
-        blancas = new Array<>();
-        negras = new Array<>();
 
         generarBlancas();
         generarNegras();
         obtenerCasillas();
+
+
+        Gdx.input.setInputProcessor(this);
     }
 
     private void generarBlancas(){
@@ -61,9 +65,7 @@ public class GameScreen implements Screen {
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
             RectangleMapObject rectangleObject = (RectangleMapObject) object;
 
-
-            blancas.add(new Piece(new Vector2(rectangle.x,rectangle.y),"b",(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j")));
-
+            piezasTablero[(int)rectangleObject.getProperties().get("i")][(int)rectangleObject.getProperties().get("j")] = new Piece(new Vector2(rectangle.x,rectangle.y),"b",(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j"));
         }
 
     }
@@ -75,8 +77,7 @@ public class GameScreen implements Screen {
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
             RectangleMapObject rectangleObject = (RectangleMapObject) object;
 
-
-            negras.add(new Piece(new Vector2(rectangle.x,rectangle.y),"n",(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j")));
+            piezasTablero[(int)rectangleObject.getProperties().get("i")][(int)rectangleObject.getProperties().get("j")] = new Piece(new Vector2(rectangle.x,rectangle.y),"n",(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j"));
         }
 
     }
@@ -88,15 +89,15 @@ public class GameScreen implements Screen {
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 
             RectangleMapObject rectangleObject = (RectangleMapObject) object;
-            System.out.println( rectangleObject.getProperties().get("j"));
+            casillasTablero[(int)rectangleObject.getProperties().get("i")][(int)rectangleObject.getProperties().get("j")] = new Casilla(rectangle,(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j"));
         }
-
     }
 
 
     @Override
     public void render(float delta) {
-        actualizar();
+
+        
         pintar();
     }
 
@@ -106,18 +107,17 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         renderer.render();
-
-
 
         batch.begin();
 
-        for(Piece piece : blancas)
-            piece.draw(batch);
 
-        for(Piece piece : negras)
-            piece.draw(batch);
+        batch.draw(ResourceManager.selection,piezasTablero[auxi][auxj].getX(),piezasTablero[auxi][auxj].getY());
+
+        for(int i = 0 ; i < piezasTablero.length; i++)
+            for(int j = 0 ; j < piezasTablero[0].length; j++)
+                if(piezasTablero[i][j] != null)
+                    piezasTablero[i][j].draw(batch);
 
         batch.end();
     }
@@ -211,5 +211,64 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        //new Vector2(getMousePosInGameWorld().x,getMousePosInGameWorld().y)
+
+        Vector2 pulsacion = new Vector2(getMousePosInGameWorld().x, getMousePosInGameWorld().y);
+
+        for(int i = 0 ; i < piezasTablero.length; i++)
+            for(int j = 0 ; j < piezasTablero[0].length; j++)
+                if(piezasTablero[i][j] != null)
+                    if(piezasTablero[i][j].getRect().contains(pulsacion)) {
+                        auxi = i;
+                        auxj = j;
+                    }
+
+        System.out.println(auxi+" - "+auxj);
+
+        return false;
+    }
+
+    public static Vector3 getMousePosInGameWorld() {
+        return camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

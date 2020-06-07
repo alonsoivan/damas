@@ -35,4 +35,20 @@ public class Piece extends Sprite {
     public void draw(Batch batch) {
         super.draw(batch);
     }
+
+    public boolean isDama() {
+        return dama;
+    }
+
+    public Rectangle getRect() {
+        return rect;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public int getJ() {
+        return j;
+    }
 }

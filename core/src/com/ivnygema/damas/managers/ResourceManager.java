@@ -16,11 +16,13 @@ public class ResourceManager {
     public static Texture blancasTexture;
     public static Texture negrasTexture;
     public static Texture selection;
+    public static Texture posibles;
 
     public static void loadAllResources() {
         blancasTexture = new Texture("blanca.png");
         negrasTexture = new Texture("negra.png");
         selection = new Texture("selection.png");
+        posibles = new Texture("posibles.png");
     }
 
     /** Actualiza la carga de recursos */

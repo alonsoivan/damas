@@ -51,4 +51,37 @@ public class Piece extends Sprite {
     public int getJ() {
         return j;
     }
+
+    public void setDama(boolean dama) {
+        this.dama = dama;
+    }
+
+    public void setRect(Rectangle rect) {
+        this.rect = rect;
+        super.setPosition(rect.x,rect.y);
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
+    }
+
+    public boolean isBlack(){
+        if (color.equals("b"))
+            return false;
+        return true;
+    }
+
+    public boolean isWhite(){
+        if (color.equals("b"))
+            return true;
+        return false;
+    }
 }

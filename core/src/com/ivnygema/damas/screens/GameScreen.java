@@ -34,6 +34,8 @@ public class GameScreen implements Screen, InputProcessor {
     //
     Piece [][] piezasTablero = new Piece[8][8];
     Casilla[][] casillasTablero = new Casilla[8][8];
+    Array<Casilla> posibles;
+    Boolean selected;
 
     protected int auxi = 0,auxj = 0;
 
@@ -49,6 +51,8 @@ public class GameScreen implements Screen, InputProcessor {
         batch = renderer.getBatch();
 
         //
+        posibles = new Array<>();
+        selected = false;
 
         generarBlancas();
         generarNegras();
@@ -62,10 +66,12 @@ public class GameScreen implements Screen, InputProcessor {
         MapLayer collisionsLayer = map.getLayers().get("blancas");
 
         for (MapObject object : collisionsLayer.getObjects()){
-            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
             RectangleMapObject rectangleObject = (RectangleMapObject) object;
+            Rectangle rectangle = rectangleObject.getRectangle();
 
-            piezasTablero[(int)rectangleObject.getProperties().get("i")][(int)rectangleObject.getProperties().get("j")] = new Piece(new Vector2(rectangle.x,rectangle.y),"b",(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j"));
+            int i = (int)rectangleObject.getProperties().get("i");
+            int j = (int)rectangleObject.getProperties().get("j");
+            piezasTablero[i][j] = new Piece(new Vector2(rectangle.x,rectangle.y),"b", i, j);
         }
 
     }
@@ -74,10 +80,12 @@ public class GameScreen implements Screen, InputProcessor {
         MapLayer collisionsLayer = map.getLayers().get("negras");
 
         for (MapObject object : collisionsLayer.getObjects()){
-            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
             RectangleMapObject rectangleObject = (RectangleMapObject) object;
+            Rectangle rectangle = rectangleObject.getRectangle();
 
-            piezasTablero[(int)rectangleObject.getProperties().get("i")][(int)rectangleObject.getProperties().get("j")] = new Piece(new Vector2(rectangle.x,rectangle.y),"n",(int)rectangleObject.getProperties().get("i"),(int)rectangleObject.getProperties().get("j"));
+            int i = (int)rectangleObject.getProperties().get("i");
+            int j = (int)rectangleObject.getProperties().get("j");
+            piezasTablero[i][j] = new Piece(new Vector2(rectangle.x,rectangle.y),"n", i, j);
         }
 
     }
@@ -93,6 +101,35 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    private void calcularPosibles(){
+        int ajuste = 0;
+        posibles.clear();
+
+        if(piezasTablero[auxi][auxj].isBlack())
+            ajuste = 1;
+        else
+            ajuste = -1;
+
+        if(auxj>0 && auxj<7){
+            if(piezasTablero[auxi + ajuste][auxj - 1] == null){
+                posibles.add(new Casilla(new Rectangle(), auxi + ajuste, auxj -1));
+            }
+            if(piezasTablero[auxi + ajuste][auxj + 1] == null) {
+                posibles.add(new Casilla(new Rectangle(), auxi + ajuste, auxj + 1));
+            }
+        }else{
+            if(auxj == 0){
+                if(piezasTablero[auxi + ajuste][auxj + 1] == null){
+                    posibles.add(new Casilla(new Rectangle(), auxi + ajuste, auxj + 1));
+                }
+            }
+            if(auxj == 7 ){
+                if(piezasTablero[auxi +ajuste][auxj -1] == null){
+                    posibles.add(new Casilla(new Rectangle(), auxi + ajuste , auxj - 1));
+                }
+            }
+        }
+    }
 
     @Override
     public void render(float delta) {
@@ -111,8 +148,12 @@ public class GameScreen implements Screen, InputProcessor {
 
         batch.begin();
 
+        if(selected)
+            batch.draw(ResourceManager.selection,piezasTablero[auxi][auxj].getX(),piezasTablero[auxi][auxj].getY());
 
-        batch.draw(ResourceManager.selection,piezasTablero[auxi][auxj].getX(),piezasTablero[auxi][auxj].getY());
+        for(Casilla casilla: posibles){
+            batch.draw(ResourceManager.posibles, casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY());
+        }
 
         for(int i = 0 ; i < piezasTablero.length; i++)
             for(int j = 0 ; j < piezasTablero[0].length; j++)
@@ -120,6 +161,11 @@ public class GameScreen implements Screen, InputProcessor {
                     piezasTablero[i][j].draw(batch);
 
         batch.end();
+    }
+
+    private void resetSelection(){
+       selected = false;
+       posibles.clear();
     }
 
     public void actualizar(){
@@ -241,8 +287,24 @@ public class GameScreen implements Screen, InputProcessor {
                     if(piezasTablero[i][j].getRect().contains(pulsacion)) {
                         auxi = i;
                         auxj = j;
+                        selected = true;
+                        calcularPosibles();
+
                     }
 
+        for(Casilla casilla: posibles){
+            Rectangle rect = new Rectangle(casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY(),64,64);
+            if(rect.contains(pulsacion)){
+                System.out.println("OKEYMARINERO");
+                piezasTablero[casilla.getI()][casilla.getJ()]=piezasTablero[auxi][auxj];
+                piezasTablero[auxi][auxj]=null;
+                piezasTablero[casilla.getI()][casilla.getJ()].setI(casilla.getI());
+                piezasTablero[casilla.getI()][casilla.getJ()].setJ(casilla.getJ());
+                piezasTablero[casilla.getI()][casilla.getJ()].setRect(casillasTablero[casilla.getI()][casilla.getJ()].getRect());
+
+                resetSelection();
+            }
+        }
         System.out.println(auxi+" - "+auxj);
 
         return false;

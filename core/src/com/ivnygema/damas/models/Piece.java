@@ -2,6 +2,7 @@ package com.ivnygema.damas.models;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -31,8 +32,7 @@ public class Piece extends Sprite {
 
     }
 
-    @Override
-    public void draw(Batch batch) {
+    public void draw(SpriteBatch batch) {
         super.draw(batch);
     }
 

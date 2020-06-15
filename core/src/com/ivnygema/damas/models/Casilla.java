@@ -7,11 +7,23 @@ public class Casilla {
     private Rectangle rect;
     private int i;
     private int j;
+    private int amenazai;
+    private int amenazaj;
+    private boolean amenaza;
 
     public Casilla(Rectangle rect, int i, int j) {
         this.rect = rect;
         this.i = i;
         this.j = j;
+    }
+
+    public Casilla(Rectangle rect, int i, int j, int amenazai, int amenazaj) {
+        this.rect = rect;
+        this.i = i;
+        this.j = j;
+        this.amenaza = true;
+        this.amenazai = amenazai;
+        this.amenazaj = amenazaj;
     }
 
     public Rectangle getRect() {
@@ -36,5 +48,29 @@ public class Casilla {
 
     public void setJ(int j) {
         this.j = j;
+    }
+
+    public int getAmenazai() {
+        return amenazai;
+    }
+
+    public void setAmenazai(int amenazai) {
+        this.amenazai = amenazai;
+    }
+
+    public int getAmenazaj() {
+        return amenazaj;
+    }
+
+    public void setAmenazaj(int amenazaj) {
+        this.amenazaj = amenazaj;
+    }
+
+    public boolean hayAmenaza() {
+        return amenaza;
+    }
+
+    public void setAmenaza(boolean amenaza) {
+        this.amenaza = amenaza;
     }
 }

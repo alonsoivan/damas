@@ -61,9 +61,12 @@ public class Piece extends Sprite {
         return j;
     }
 
-    public void setDama(boolean dama) {
-        this.dama = dama;
-        super.setTexture(damabTexture);
+    public void setDama() {
+        this.dama = true;
+        if(color.equals("n"))
+            super.setTexture(damanTexture);
+        else
+            super.setTexture(damabTexture);
     }
 
     public void setRect(Rectangle rect) {
@@ -93,5 +96,9 @@ public class Piece extends Sprite {
         if (color.equals("b"))
             return true;
         return false;
+    }
+
+    public boolean mismoColor(Piece piece){
+        return color.equals(piece.color);
     }
 }

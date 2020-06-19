@@ -15,6 +15,7 @@ public class ResourceManager {
 
     public static Texture blancasTexture;
     public static Texture damabTexture;
+    public static Texture damanTexture;
     public static Texture negrasTexture;
     public static Texture selection;
     public static Texture posibles;
@@ -23,6 +24,7 @@ public class ResourceManager {
     public static void loadAllResources() {
         blancasTexture = new Texture("blanca.png");
         damabTexture = new Texture("damab.png");
+        damanTexture = new Texture("daman.png");
         negrasTexture = new Texture("negra.png");
         selection = new Texture("selection.png");
         posibles = new Texture("posibles.png");

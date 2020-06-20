@@ -17,6 +17,7 @@ public class Piece extends Sprite {
     private String color;
     private int i = 0;
     private int j = 0;
+    private Rectangle nuevaPos;
 
     public Piece(Vector2 pos, String color, int i, int j){
         super(negrasTexture);
@@ -36,6 +37,17 @@ public class Piece extends Sprite {
     public void draw(SpriteBatch batch) {
         //super.draw(batch);
 
+        if (nuevaPos!=null) {
+            if (nuevaPos.x > rect.x)
+                rect.x+=3;
+            if (nuevaPos.x < rect.x)
+                rect.x-=3;
+            if (nuevaPos.y > rect.y)
+                rect.y+=3;
+            if (nuevaPos.y < rect.y)
+                rect.y-=3;
+        }
+        super.setPosition(rect.x,rect.y);
 
         batch.draw(this.getTexture(),getScreenCoordinates(rect).x,getScreenCoordinates(rect).y,Gdx.graphics.getWidth()/8,Gdx.graphics.getWidth()/8);
     }
@@ -70,8 +82,8 @@ public class Piece extends Sprite {
     }
 
     public void setRect(Rectangle rect) {
-        this.rect = rect;
-        super.setPosition(rect.x,rect.y);
+        //this.rect = rect;
+        nuevaPos = rect;
     }
 
     public void setColor(String color) {

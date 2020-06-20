@@ -12,10 +12,14 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
-public class MainScreen implements Screen {
-
+public class WinScreen implements Screen {
     private Stage stage;
 
+    private String ganador;
+    public WinScreen(String ganador){
+        super();
+        this.ganador = ganador;
+    }
 
     @Override
     public void show() {
@@ -30,7 +34,7 @@ public class MainScreen implements Screen {
         stage.addActor(table);
 
 
-        VisTextButton playButton = new VisTextButton("PLAY");
+        VisTextButton playButton = new VisTextButton("VOLVER A JUGAR");
         playButton.addListener(new ClickListener() {
 
             @Override
@@ -40,24 +44,13 @@ public class MainScreen implements Screen {
             }
         });
 
-        VisTextButton configButton = new VisTextButton("CONFIGURATION");
-        configButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new WinScreen("JUGADOR 1"));
-                dispose();
-            }
-        });
-
-        VisLabel aboutLabel = new VisLabel("DAMAS \n(c) IVÁN ALONSO & GEMA GIL 2020");
+        VisLabel aboutLabel = new VisLabel(ganador + " ganó.");
 
         // Añade filas a la tabla y añade los componentes
         table.row();
         table.add(playButton).center().width(600).height(200).pad(5);
         table.row();
-        table.add(configButton).center().width(600).height(150).pad(5);
-        table.row();
-        table.add(aboutLabel).left().width(600).height(20).pad(5);
+        table.add(aboutLabel).left().width(600).height(10).pad(5);
 
         Gdx.input.setInputProcessor(stage);
     }

@@ -1,6 +1,7 @@
 package com.ivnygema.damas.screens;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -124,6 +125,7 @@ public class GameScreen implements Screen, InputProcessor {
             movimientoDama();
         else
             movimientoNormal();
+
     }
 
     public void movimientoDama() {
@@ -312,6 +314,18 @@ public class GameScreen implements Screen, InputProcessor {
     public void render(float delta) {
 
         pintar();
+        actualizar();
+    }
+
+    public void actualizar(){
+        if(contB + contBD == 12) {
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new WinScreen("JUGADOR 2"));
+            dispose();
+        }
+        if(contN + contND == 12){
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new WinScreen("JUGADOR 1"));
+            dispose();
+        }
     }
 
     public void pintar(){
@@ -361,12 +375,6 @@ public class GameScreen implements Screen, InputProcessor {
             batch2.draw(ResourceManager.damanTexture, 0 + 10 + (60*i),Piece.getScreenCoordinates(casillasTablero[7][7].getRect()).y - ResourceManager.damabTexture.getHeight()*2 - 10,Gdx.graphics.getWidth()/8,Gdx.graphics.getWidth()/8);
 
         hud.pintar(batch2);
-
-        System.out.println("contb "+contB);
-        System.out.println("contn "+contN);
-        System.out.println("contbd "+contBD);
-        System.out.println("contnd "+contND);
-
 
         batch2.end();
 
@@ -432,10 +440,13 @@ public class GameScreen implements Screen, InputProcessor {
             for(int j = 0 ; j < piezasTablero[0].length; j++)
                 if(piezasTablero[i][j] != null)
                     if(piezasTablero[i][j].getRect().contains(pulsacion)) {
-                        selecti = i;
-                        selectj = j;
-                        selected = false;
-                        
+
+                        if (!selected || piezasTablero[selecti][selectj].mismoColor(piezasTablero[i][j])) {
+                            selecti = i;
+                            selectj = j;
+                            selected = false;
+                        }
+
                         if(contTurno % 2 == 0 && piezasTablero[selecti][selectj].isWhite()) {
                             selected = true;
                             calcularPosibles();
@@ -471,7 +482,11 @@ public class GameScreen implements Screen, InputProcessor {
                             contN++;
 
                     piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()]=null;
-                }
+
+
+                }else
+                    hud.pasarTurno(++contTurno);
+
 
                 if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0)
                     piezasTablero[casilla.getI()][casilla.getJ()].setDama();
@@ -479,8 +494,9 @@ public class GameScreen implements Screen, InputProcessor {
                 if(piezasTablero[casilla.getI()][casilla.getJ()].isBlack() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 7)
                     piezasTablero[casilla.getI()][casilla.getJ()].setDama();
 
+
                 resetSelection();
-                hud.pasarTurno(++contTurno);
+
             }
         }
         System.out.println(selecti +" - "+ selectj);

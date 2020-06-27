@@ -341,7 +341,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 
         if(selected)
-            batch.draw(ResourceManager.selection,piezasTablero[selecti][selectj].getX(),piezasTablero[selecti][selectj].getY());
+            batch.draw(ResourceManager.selection,casillasTablero[selecti][selectj].rect.getX(),casillasTablero[selecti][selectj].rect.getY());
 
         for(Casilla casilla: posibles){
             batch.draw(ResourceManager.posibles, casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY());
@@ -436,6 +436,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         Vector2 pulsacion = new Vector2(getMousePosInGameWorld().x, getMousePosInGameWorld().y);
 
+        boolean pasarTurno = true;
+
         for(int i = 0 ; i < piezasTablero.length; i++)
             for(int j = 0 ; j < piezasTablero[0].length; j++)
                 if(piezasTablero[i][j] != null)
@@ -469,24 +471,33 @@ public class GameScreen implements Screen, InputProcessor {
                 piezasTablero[casilla.getI()][casilla.getJ()].setRect(casillasTablero[casilla.getI()][casilla.getJ()].getRect());
 
 
-                if(casilla.hayAmenaza()){
-                    if(piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isWhite())
-                        if(piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isDama())
+                if(casilla.hayAmenaza()) {
+                    if (piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isWhite())
+                        if (piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isDama())
                             contBD++;
                         else
                             contB++;
+                    else if (piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isDama())
+                        contND++;
                     else
-                        if(piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isDama())
-                            contND++;
-                        else
-                            contN++;
+                        contN++;
 
-                    piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()]=null;
+                    piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()] = null;
+
+                    selecti = casilla.getI();
+                    selectj = casilla.getJ();
+                    calcularPosibles();
+                    if(peligros.size>0){
+                        selected = true;
+                        pasarTurno = false;
+                    }
 
 
-                }else
+                }
+                if(pasarTurno) {
                     hud.pasarTurno(++contTurno);
-
+                    resetSelection();
+                }
 
                 if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0)
                     piezasTablero[casilla.getI()][casilla.getJ()].setDama();
@@ -495,7 +506,7 @@ public class GameScreen implements Screen, InputProcessor {
                     piezasTablero[casilla.getI()][casilla.getJ()].setDama();
 
 
-                resetSelection();
+
 
             }
         }

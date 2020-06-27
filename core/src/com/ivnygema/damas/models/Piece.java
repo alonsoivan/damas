@@ -39,13 +39,14 @@ public class Piece extends Sprite {
 
         if (nuevaPos!=null) {
             if (nuevaPos.x > rect.x)
-                rect.x+=3;
+                rect.x+=2;
             if (nuevaPos.x < rect.x)
-                rect.x-=3;
+                rect.x-=2;
             if (nuevaPos.y > rect.y)
-                rect.y+=3;
+                rect.y+=2;
             if (nuevaPos.y < rect.y)
-                rect.y-=3;
+                rect.y-=2;
+
         }
         super.setPosition(rect.x,rect.y);
 

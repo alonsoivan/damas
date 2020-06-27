@@ -15,8 +15,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 public class MainScreen implements Screen {
 
     private Stage stage;
-
-
+    
     @Override
     public void show() {
 

@@ -4,7 +4,7 @@ package com.ivnygema.damas.models;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Casilla {
-    private Rectangle rect;
+    public Rectangle rect;
     private int i;
     private int j;
     private int amenazai;

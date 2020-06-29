@@ -1,8 +1,10 @@
 package com.ivnygema.damas.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +23,12 @@ public class ResourceManager {
     public static Texture posibles;
     public static Texture danger;
 
+    // SOUNDS
+    public static Sound selectionSound;
+    public static Sound moveSound;
+    public static Sound comerSound;
+    public static Sound damaSound;
+
     public static void loadAllResources() {
         blancasTexture = new Texture("blanca.png");
         damabTexture = new Texture("damab.png");
@@ -29,6 +37,10 @@ public class ResourceManager {
         selection = new Texture("selection.png");
         posibles = new Texture("posibles.png");
         danger = new Texture("danger.png");
+        selectionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/selected.wav"));
+        moveSound = Gdx.audio.newSound(Gdx.files.internal("sounds/moved.wav"));
+        comerSound = Gdx.audio.newSound(Gdx.files.internal("sounds/comer.mp3"));
+        damaSound = Gdx.audio.newSound(Gdx.files.internal("sounds/dama.mp3"));
     }
 
     /** Actualiza la carga de recursos */

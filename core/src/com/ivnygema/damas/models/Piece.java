@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 import com.ivnygema.damas.screens.GameScreen;
 
 import static com.ivnygema.damas.managers.ResourceManager.*;
@@ -47,6 +48,10 @@ public class Piece extends Sprite {
             if (nuevaPos.y < rect.y)
                 rect.y-=2;
 
+            if(nuevaPos.x == rect.x && nuevaPos.y == rect.y){
+                moveSound.play(0.7f);
+                nuevaPos = null;
+            }
         }
         super.setPosition(rect.x,rect.y);
 
@@ -75,11 +80,16 @@ public class Piece extends Sprite {
     }
 
     public void setDama() {
+
         this.dama = true;
+
+        damaSound.play(0.7f);
+
         if(color.equals("n"))
             super.setTexture(damanTexture);
         else
             super.setTexture(damabTexture);
+
     }
 
     public void setRect(Rectangle rect) {

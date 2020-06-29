@@ -19,11 +19,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.ivnygema.damas.managers.HUD;
 import com.ivnygema.damas.managers.ResourceManager;
 import com.ivnygema.damas.models.Casilla;
 import com.ivnygema.damas.models.Piece;
 
+import static com.ivnygema.damas.managers.ResourceManager.*;
 import static com.ivnygema.damas.util.Constantes.*;
 
 public class GameScreen implements Screen, InputProcessor {
@@ -123,6 +125,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         if(piezasTablero[selecti][selectj].isDama())
             movimientoDama();
+
         else
             movimientoNormal();
 
@@ -449,27 +452,25 @@ public class GameScreen implements Screen, InputProcessor {
                             selected = false;
                         }
 
-                        if(contTurno % 2 == 0 && piezasTablero[selecti][selectj].isWhite()) {
+                        if(contTurno % 2 == 0 && piezasTablero[selecti][selectj].isWhite() || contTurno % 2 != 0 && piezasTablero[selecti][selectj].isBlack()) {
+                            selectionSound.play(0.7f);
                             selected = true;
                             calcularPosibles();
+
                         }
-                        else if(contTurno % 2 != 0 && piezasTablero[selecti][selectj].isBlack()) {
-                            selected = true;
-                            calcularPosibles();
-                        }
+
+
                     }
 
-        for(Casilla casilla: posibles){
+        for(final Casilla casilla: posibles){
             Rectangle rect = new Rectangle(casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY(),64,64);
             if(rect.contains(pulsacion)){
-
 
                 piezasTablero[casilla.getI()][casilla.getJ()]=piezasTablero[selecti][selectj];
                 piezasTablero[selecti][selectj]=null;
                 piezasTablero[casilla.getI()][casilla.getJ()].setI(casilla.getI());
                 piezasTablero[casilla.getI()][casilla.getJ()].setJ(casilla.getJ());
                 piezasTablero[casilla.getI()][casilla.getJ()].setRect(casillasTablero[casilla.getI()][casilla.getJ()].getRect());
-
 
                 if(casilla.hayAmenaza()) {
                     if (piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()].isWhite())
@@ -483,6 +484,8 @@ public class GameScreen implements Screen, InputProcessor {
                         contN++;
 
                     piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()] = null;
+
+                    comerSound.play(0.7f);
 
                     selecti = casilla.getI();
                     selectj = casilla.getJ();
@@ -499,13 +502,12 @@ public class GameScreen implements Screen, InputProcessor {
                     resetSelection();
                 }
 
-                if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0)
-                    piezasTablero[casilla.getI()][casilla.getJ()].setDama();
-
-                if(piezasTablero[casilla.getI()][casilla.getJ()].isBlack() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 7)
-                    piezasTablero[casilla.getI()][casilla.getJ()].setDama();
-
-
+                if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0 ||
+                        (piezasTablero[casilla.getI()][casilla.getJ()].isBlack() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 7))
+                    Timer.schedule(new Timer.Task() {
+                        public void run() {
+                            piezasTablero[casilla.getI()][casilla.getJ()].setDama();                        }
+                    }, 1f);
 
 
             }

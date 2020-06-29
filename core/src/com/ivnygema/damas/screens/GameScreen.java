@@ -485,7 +485,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                     piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()] = null;
 
-                    comerSound.play(0.7f);
+                    comerSound.play(0.5f);
 
                     selecti = casilla.getI();
                     selectj = casilla.getJ();
@@ -508,7 +508,6 @@ public class GameScreen implements Screen, InputProcessor {
                         public void run() {
                             piezasTablero[casilla.getI()][casilla.getJ()].setDama();                        }
                     }, 1f);
-
 
             }
         }

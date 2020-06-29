@@ -3,10 +3,10 @@ package com.ivnygema.damas.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Timer;
 import com.ivnygema.damas.screens.GameScreen;
 
 import static com.ivnygema.damas.managers.ResourceManager.*;
@@ -38,15 +38,25 @@ public class Piece extends Sprite {
     public void draw(SpriteBatch batch) {
         //super.draw(batch);
 
+        int movimiento = 0;
+
+
+
         if (nuevaPos!=null) {
+
+            if(abs(nuevaPos.x - rect.x) >= 7)
+                movimiento = 5;
+            else
+                movimiento = 1;
+
             if (nuevaPos.x > rect.x)
-                rect.x+=2;
+                rect.x+=movimiento;
             if (nuevaPos.x < rect.x)
-                rect.x-=2;
+                rect.x-=movimiento;
             if (nuevaPos.y > rect.y)
-                rect.y+=2;
+                rect.y+=movimiento;
             if (nuevaPos.y < rect.y)
-                rect.y-=2;
+                rect.y-=movimiento;
 
             if(nuevaPos.x == rect.x && nuevaPos.y == rect.y){
                 moveSound.play(0.7f);
@@ -61,6 +71,13 @@ public class Piece extends Sprite {
     public static Vector3 getScreenCoordinates(Rectangle rect){
         Vector3 vec=new Vector3(rect.x,rect.y,0);
         return GameScreen.camera.project(vec);
+    }
+
+    public float abs(float num){
+        if(num<0)
+            return num + num*-2;
+        else
+            return num;
     }
 
     public boolean isDama() {

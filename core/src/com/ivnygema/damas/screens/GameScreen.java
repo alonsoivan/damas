@@ -45,7 +45,9 @@ public class GameScreen implements Screen, InputProcessor {
     public static Casilla[][] casillasTablero = new Casilla[8][8];
     Array<Casilla> posibles;
     Array<Casilla> peligros;
-    Boolean selected;
+    boolean selected;
+
+    boolean comer;
 
     int contB = 0;
     int contBD = 0;
@@ -119,28 +121,29 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
-    private void calcularPosibles() {
+    private void calcularPosibles(boolean comer ) {
+        this.comer = comer;
         posibles.clear();
         peligros.clear();
 
         if(piezasTablero[selecti][selectj].isDama())
-            movimientoDama();
-
+            movimientoDama(comer);
         else
-            movimientoNormal();
+            movimientoNormal(comer);
 
     }
 
-    public void movimientoDama() {
+    public void movimientoDama(boolean comer) {
         int auxi = selecti;
         int auxj = selectj;
         boolean encontrado = false;
 
         // Diagonal arriba izq
         while(--auxi >= 0 && --auxj >= 0 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else
                 if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                     encontrado = true;
                 else{
@@ -158,9 +161,10 @@ public class GameScreen implements Screen, InputProcessor {
         encontrado = false;
         // Diagonal arriba der
         while(--auxi >= 0 && ++auxj <= 7 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                 encontrado = true;
             else{
                 if(auxi -1 >= 0 && auxj +1 <= 7)
@@ -177,9 +181,10 @@ public class GameScreen implements Screen, InputProcessor {
         encontrado = false;
         // Diagonal abajo izq
         while(++auxi <= 7 && --auxj >= 0 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                 encontrado = true;
             else{
                 if(auxi +1 <=7 && auxj -1 >=0)
@@ -196,9 +201,10 @@ public class GameScreen implements Screen, InputProcessor {
         encontrado = false;
         // Diagonal abajo der
         while(++auxi <= 7 && ++auxj <= 7 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                 encontrado = true;
             else{
                 if(auxi +1 <=7 && auxj +1 <=7)
@@ -211,7 +217,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
-    public void movimientoNormal(){
+    public void movimientoNormal(boolean comer){
         int ajuste = 0;
 
         if(piezasTablero[selecti][selectj].isBlack())
@@ -224,7 +230,8 @@ public class GameScreen implements Screen, InputProcessor {
         }else {
             if (selectj > 0 && selectj < 7) {
                 if (piezasTablero[selecti + ajuste][selectj - 1] == null) {
-                    posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
+                    if(!comer)
+                        posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
                 } else {
                     // blancas comer IZQUIERDA
                     if (selecti > 1 && selectj > 1 && piezasTablero[selecti][selectj].isWhite()) {
@@ -244,7 +251,8 @@ public class GameScreen implements Screen, InputProcessor {
                     }
                 }
                 if (piezasTablero[selecti + ajuste][selectj + 1] == null) {
-                    posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
+                    if(!comer)
+                        posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
                 } else {
                     // blancas comer DERECHA
                     if (selecti > 1 && selectj < 6 && piezasTablero[selecti][selectj].isWhite()) {
@@ -266,7 +274,8 @@ public class GameScreen implements Screen, InputProcessor {
             } else {
                 if (selectj == 0) {
                     if (piezasTablero[selecti + ajuste][selectj + 1] == null) {
-                        posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
+                        if(!comer)
+                            posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
                     } else {
                         // blancas comer DERECHA
                         if (selecti > 1 && piezasTablero[selecti][selectj].isWhite()) {
@@ -288,7 +297,8 @@ public class GameScreen implements Screen, InputProcessor {
                 }
                 if (selectj == 7) {
                     if (piezasTablero[selecti + ajuste][selectj - 1] == null) {
-                        posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
+                        if(!comer)
+                            posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
                     } else {
                         // blancas comer IZQUIERDA
                         if (selecti > 1 && piezasTablero[selecti][selectj].isWhite()) {
@@ -446,20 +456,20 @@ public class GameScreen implements Screen, InputProcessor {
                 if(piezasTablero[i][j] != null)
                     if(piezasTablero[i][j].getRect().contains(pulsacion)) {
 
-                        if (!selected || piezasTablero[selecti][selectj].mismoColor(piezasTablero[i][j])) {
-                            selecti = i;
-                            selectj = j;
-                            selected = false;
+                        if(!comer) {
+                            if (!selected || piezasTablero[selecti][selectj].mismoColor(piezasTablero[i][j])) {
+                                selecti = i;
+                                selectj = j;
+                                selected = false;
+                            }
+
+
+                            if (contTurno % 2 == 0 && piezasTablero[selecti][selectj].isWhite() || contTurno % 2 != 0 && piezasTablero[selecti][selectj].isBlack()) {
+                                selectionSound.play(0.7f);
+                                selected = true;
+                                calcularPosibles(false);
+                            }
                         }
-
-                        if(contTurno % 2 == 0 && piezasTablero[selecti][selectj].isWhite() || contTurno % 2 != 0 && piezasTablero[selecti][selectj].isBlack()) {
-                            selectionSound.play(0.7f);
-                            selected = true;
-                            calcularPosibles();
-
-                        }
-
-
                     }
 
         for(final Casilla casilla: posibles){
@@ -489,13 +499,12 @@ public class GameScreen implements Screen, InputProcessor {
 
                     selecti = casilla.getI();
                     selectj = casilla.getJ();
-                    calcularPosibles();
+                    calcularPosibles(true);
                     if(peligros.size>0){
                         selected = true;
                         pasarTurno = false;
-                    }
-
-
+                    }else
+                        comer = false;
                 }
                 if(pasarTurno) {
                     hud.pasarTurno(++contTurno);

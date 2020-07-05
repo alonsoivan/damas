@@ -40,8 +40,6 @@ public class Piece extends Sprite {
 
         int movimiento = 0;
 
-
-
         if (nuevaPos!=null) {
 
             if(abs(nuevaPos.x - rect.x) >= 7)
@@ -98,15 +96,16 @@ public class Piece extends Sprite {
 
     public void setDama() {
 
-        this.dama = true;
+        if(!this.dama) {
+            this.dama = true;
 
-        damaSound.play(0.7f);
+            damaSound.play(0.7f);
 
-        if(color.equals("n"))
-            super.setTexture(damanTexture);
-        else
-            super.setTexture(damabTexture);
-
+            if (color.equals("n"))
+                super.setTexture(damanTexture);
+            else
+                super.setTexture(damabTexture);
+        }
     }
 
     public void setRect(Rectangle rect) {

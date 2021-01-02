@@ -31,16 +31,16 @@ public class HUD {
         jugador1.setUseIntegerPositions(false);
 
         layout = new GlyphLayout();
-        layout.setText(jugador2, "Jugador 1");
+        layout.setText(jugador2, "Jugador 2");
 
         jugador1.setColor(Color.RED);
     }
 
     public void pintar(SpriteBatch batch){
 
-        jugador2.draw(batch, "Jugador 2", 20 , Piece.getScreenCoordinates(casillasTablero[0][0].getRect()).y + ResourceManager.damabTexture.getHeight()*4 + 10);
+        jugador2.draw(batch, "Jugador 2", 20 , (Gdx.graphics.getHeight() + Piece.getScreenCoordinates(casillasTablero[0][0].getRect()).y + ResourceManager.damabTexture.getHeight()) / 2);
 
-        jugador1.draw(batch, "Jugador 1", Gdx.graphics.getWidth() - layout.width -20  , Piece.getScreenCoordinates(casillasTablero[7][7].getRect()).y - ResourceManager.damabTexture.getHeight()*3 - 10);
+        jugador1.draw(batch, "Jugador 1", Gdx.graphics.getWidth() - layout.width -20  , Piece.getScreenCoordinates(casillasTablero[7][7].getRect()).y / 2);
 
     }
 

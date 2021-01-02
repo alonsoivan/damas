@@ -19,14 +19,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.ivnygema.damas.managers.HUD;
 import com.ivnygema.damas.managers.ResourceManager;
 import com.ivnygema.damas.models.Casilla;
 import com.ivnygema.damas.models.Piece;
 
-import static com.ivnygema.damas.managers.ResourceManager.*;
-import static com.ivnygema.damas.util.Constantes.*;
+import static com.ivnygema.damas.managers.ResourceManager.comerSound;
+import static com.ivnygema.damas.managers.ResourceManager.selectionSound;
+import static com.ivnygema.damas.util.Constantes.TILE_WIDTH;
 
 public class GameScreen implements Screen, InputProcessor {
 
@@ -59,7 +59,11 @@ public class GameScreen implements Screen, InputProcessor {
     public void show() {
         // Tiledmap
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, TILES_IN_CAMERA_WIDTH * TILE_WIDTH, TILES_IN_CAMERA_HEIGHT * TILE_WIDTH);
+        //camera.setToOrtho(false, TILES_IN_CAMERA_WIDTH * TILE_WIDTH, TILES_IN_CAMERA_HEIGHT * TILE_WIDTH);
+
+        float width = TILE_WIDTH * 8;
+        float height = width * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        camera.setToOrtho(false, width   , height);
         camera.update();
 
         map = new TmxMapLoader().load("tablero.tmx");
@@ -78,6 +82,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 
         Gdx.input.setInputProcessor(this);
+        camera.position.y = casillasTablero[3][1].rect.y;
     }
 
     private void generarBlancas(){
@@ -125,10 +130,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         if(piezasTablero[selecti][selectj].isDama())
             movimientoDama();
-
         else
             movimientoNormal();
-
     }
 
     public void movimientoDama() {
@@ -138,19 +141,21 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Diagonal arriba izq
         while(--auxi >= 0 && --auxj >= 0 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else
-                if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!existePosible(auxi, auxj)) {
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+                }
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                     encontrado = true;
-                else{
+            else{
                     if(auxi -1 >= 0 && auxj -1 >= 0)
                         if(piezasTablero[auxi -1][auxj -1] == null){
                             peligros.add(new Casilla(new Rectangle(), auxi, auxj));
                             posibles.add(new Casilla(new Rectangle(), auxi -1, auxj -1, auxi, auxj));
-                        }
-                    encontrado = true;
-                }
+                        }else
+                            encontrado = true;
+
+            }
         }
 
         auxi = selecti;
@@ -158,17 +163,19 @@ public class GameScreen implements Screen, InputProcessor {
         encontrado = false;
         // Diagonal arriba der
         while(--auxi >= 0 && ++auxj <= 7 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
-                encontrado = true;
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!existePosible(auxi, auxj)) {
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+                }
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+                    encontrado = true;
             else{
                 if(auxi -1 >= 0 && auxj +1 <= 7)
                     if(piezasTablero[auxi -1][auxj +1] == null){
                         peligros.add(new Casilla(new Rectangle(), auxi, auxj));
                         posibles.add(new Casilla(new Rectangle(), auxi -1, auxj +1, auxi, auxj));
-                    }
-                encontrado = true;
+                    }else
+                        encontrado = true;
             }
         }
 
@@ -177,17 +184,19 @@ public class GameScreen implements Screen, InputProcessor {
         encontrado = false;
         // Diagonal abajo izq
         while(++auxi <= 7 && --auxj >= 0 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
-                encontrado = true;
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!existePosible(auxi, auxj)) {
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+                }
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+                    encontrado = true;
             else{
                 if(auxi +1 <=7 && auxj -1 >=0)
                     if(piezasTablero[auxi +1][auxj -1] == null){
                         peligros.add(new Casilla(new Rectangle(), auxi, auxj));
                         posibles.add(new Casilla(new Rectangle(), auxi +1, auxj -1, auxi, auxj));
-                    }
-                encontrado = true;
+                    }else
+                        encontrado = true;
             }
         }
 
@@ -195,20 +204,34 @@ public class GameScreen implements Screen, InputProcessor {
         auxj = selectj;
         encontrado = false;
         // Diagonal abajo der
-        while(++auxi <= 7 && ++auxj <= 7 && !encontrado){
-            if(piezasTablero[auxi][auxj] == null)
-                posibles.add(new Casilla(new Rectangle(), auxi, auxj));
-            else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+        while(++auxi <= 7 && ++auxj <= 7 && !encontrado) {
+            if (piezasTablero[auxi][auxj] == null) {
+                if (!existePosible(auxi, auxj)) {
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+                }
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                 encontrado = true;
             else{
                 if(auxi +1 <=7 && auxj +1 <=7)
                     if(piezasTablero[auxi +1][auxj +1] == null){
                         peligros.add(new Casilla(new Rectangle(), auxi, auxj));
                         posibles.add(new Casilla(new Rectangle(), auxi +1, auxj +1, auxi, auxj));
-                    }
-                encontrado = true;
+                    }else
+                        encontrado = true;
             }
         }
+    }
+
+    public boolean existePosible(int i, int j){
+        boolean existe = false;
+        int iterator = 0;
+        while (iterator < posibles.size && !existe){
+            if(posibles.get(iterator).i == i && posibles.get(iterator).j == j)
+                existe = true;
+            iterator++;
+        }
+
+        return existe;
     }
 
     public void movimientoNormal(){
@@ -231,7 +254,6 @@ public class GameScreen implements Screen, InputProcessor {
                         if (piezasTablero[selecti + ajuste][selectj - 1].isBlack() && piezasTablero[selecti + ajuste * 2][selectj - 2] == null) {
                             posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj - 2, selecti + ajuste, selectj - 1));
                             peligros.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
-                            System.out.println("COMEMETA IZQ B");
                         }
                     }
                     // NEGRAS comer IZQUIERDA
@@ -239,7 +261,6 @@ public class GameScreen implements Screen, InputProcessor {
                         if (piezasTablero[selecti + ajuste][selectj - 1].isWhite() && piezasTablero[selecti + ajuste * 2][selectj - 2] == null) {
                             posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj - 2, selecti + ajuste, selectj - 1));
                             peligros.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
-                            System.out.println("COMEMETA IZQ N");
                         }
                     }
                 }
@@ -251,7 +272,6 @@ public class GameScreen implements Screen, InputProcessor {
                         if (piezasTablero[selecti + ajuste][selectj + 1].isBlack() && piezasTablero[selecti + ajuste * 2][selectj + 2] == null) {
                             posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj + 2, selecti + ajuste , selectj + 1));
                             peligros.add(new Casilla(new Rectangle(), selecti + ajuste , selectj + 1));
-                            System.out.println("COMEMETA DER B");
                         }
                     }
                     // negras comer DERECHA
@@ -259,7 +279,6 @@ public class GameScreen implements Screen, InputProcessor {
                         if (piezasTablero[selecti + ajuste][selectj + 1].isWhite() && piezasTablero[selecti + ajuste * 2][selectj + 2] == null) {
                             posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj + 2, selecti + ajuste, selectj + 1));
                             peligros.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
-                            System.out.println("COMEMETA DER N");
                         }
                     }
                 }
@@ -273,7 +292,6 @@ public class GameScreen implements Screen, InputProcessor {
                             if (piezasTablero[selecti + ajuste][selectj + 1].isBlack() && piezasTablero[selecti + ajuste * 2][selectj + 2] == null) {
                                 posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj + 2, selecti + ajuste , selectj + 1));
                                 peligros.add(new Casilla(new Rectangle(), selecti + ajuste , selectj + 1));
-                                System.out.println("COMEMETA DER B");
                             }
                         }
                         // NEGRAS comer DERECHA
@@ -281,7 +299,6 @@ public class GameScreen implements Screen, InputProcessor {
                             if (piezasTablero[selecti + ajuste][selectj + 1].isWhite() && piezasTablero[selecti + ajuste * 2][selectj + 2] == null) {
                                 posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj + 2, selecti + ajuste , selectj + 1));
                                 peligros.add(new Casilla(new Rectangle(), selecti + ajuste , selectj + 1));
-                                System.out.println("COMEMETA DER N");
                             }
                         }
                     }
@@ -295,7 +312,6 @@ public class GameScreen implements Screen, InputProcessor {
                             if (piezasTablero[selecti + ajuste][selectj - 1].isBlack() && piezasTablero[selecti + ajuste * 2][selectj - 2] == null) {
                                 posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj - 2, selecti + ajuste , selectj - 1));
                                 peligros.add(new Casilla(new Rectangle(), selecti + ajuste , selectj - 1));
-                                System.out.println("COMEMETA IZQ B");
                             }
                         }
                         // negras comer IZQUIERDA
@@ -303,7 +319,6 @@ public class GameScreen implements Screen, InputProcessor {
                             if (piezasTablero[selecti + ajuste][selectj - 1].isWhite() && piezasTablero[selecti + ajuste * 2][selectj - 2] == null) {
                                 posibles.add(new Casilla(new Rectangle(), selecti + ajuste * 2, selectj - 2, selecti + ajuste , selectj - 1));
                                 peligros.add(new Casilla(new Rectangle(), selecti + ajuste , selectj - 1));
-                                System.out.println("COMEMETA IZQ N");
                             }
                         }
                     }
@@ -483,37 +498,75 @@ public class GameScreen implements Screen, InputProcessor {
                     else
                         contN++;
 
+                    //TODO
                     piezasTablero[casilla.getAmenazai()][casilla.getAmenazaj()] = null;
 
                     comerSound.play(0.5f);
 
                     selecti = casilla.getI();
                     selectj = casilla.getJ();
+
+                    if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0 ||
+                            (piezasTablero[casilla.getI()][casilla.getJ()].isBlack() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 7))
+                        piezasTablero[casilla.getI()][casilla.getJ()].setDama();
+
                     calcularPosibles();
                     if(peligros.size>0){
                         selected = true;
                         pasarTurno = false;
                     }
 
-
-                }
-                if(pasarTurno) {
-                    hud.pasarTurno(++contTurno);
-                    resetSelection();
                 }
 
                 if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0 ||
                         (piezasTablero[casilla.getI()][casilla.getJ()].isBlack() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 7))
-                    Timer.schedule(new Timer.Task() {
-                        public void run() {
-                            piezasTablero[casilla.getI()][casilla.getJ()].setDama();                        }
-                    }, 1f);
+                    piezasTablero[casilla.getI()][casilla.getJ()].setDama();
+
+                if(pasarTurno) {
+                    hud.pasarTurno(++contTurno);
+
+                    playerCanMove();
+
+                    resetSelection();
+                }
 
             }
         }
-        System.out.println(selecti +" - "+ selectj);
-
         return false;
+    }
+
+    public void playerCanMove(){
+
+        boolean hasMoves = false;
+        int i = 0, j = 0;
+
+        String color = "n";
+        if(contTurno %2 == 0) {
+            color = "b";
+        }
+        while (!hasMoves && i < piezasTablero.length){
+            j = 0;
+            while (j < piezasTablero[i].length){
+                if(piezasTablero[i][j] != null){
+                    if (piezasTablero[i][j].getPieceColor().equals(color)) {
+                        selecti = i;
+                        selectj = j;
+
+                        calcularPosibles();
+
+                        if(!posibles.isEmpty())
+                            hasMoves = true;
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+
+        if (!hasMoves){
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new WinScreen("JUGADOR 1"));
+            dispose();
+        }
     }
 
     public static Vector3 getMousePosInGameWorld() {

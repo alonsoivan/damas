@@ -3,7 +3,6 @@ package com.ivnygema.damas.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -16,8 +15,7 @@ public class Piece extends Sprite {
     private boolean dama;
     private Rectangle rect;
     private String color;
-    private int i = 0;
-    private int j = 0;
+    private int i, j;
     private Rectangle nuevaPos;
 
     public Piece(Vector2 pos, String color, int i, int j){
@@ -32,15 +30,12 @@ public class Piece extends Sprite {
 
         this.i = i;
         this.j = j;
-
     }
 
     public void draw(SpriteBatch batch) {
         //super.draw(batch);
 
-        int movimiento = 0;
-
-
+        int movimiento;
 
         if (nuevaPos!=null) {
 
@@ -97,16 +92,16 @@ public class Piece extends Sprite {
     }
 
     public void setDama() {
+        if(!dama) {
+            this.dama = true;
 
-        this.dama = true;
+            damaSound.play(0.7f);
 
-        damaSound.play(0.7f);
-
-        if(color.equals("n"))
-            super.setTexture(damanTexture);
-        else
-            super.setTexture(damabTexture);
-
+            if (color.equals("n"))
+                super.setTexture(damanTexture);
+            else
+                super.setTexture(damabTexture);
+        }
     }
 
     public void setRect(Rectangle rect) {
@@ -136,6 +131,10 @@ public class Piece extends Sprite {
         if (color.equals("b"))
             return true;
         return false;
+    }
+
+    public String getPieceColor(){
+        return color;
     }
 
     public boolean mismoColor(Piece piece){

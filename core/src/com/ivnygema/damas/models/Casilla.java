@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Casilla {
     public Rectangle rect;
-    private int i;
-    private int j;
+    public int i;
+    public int j;
     private int amenazai;
     private int amenazaj;
     private boolean amenaza;

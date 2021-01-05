@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -22,6 +21,8 @@ public class ResourceManager {
     public static Texture selection;
     public static Texture posibles;
     public static Texture danger;
+    public static Texture hint;
+
 
     // SOUNDS
     public static Sound selectionSound;
@@ -37,6 +38,7 @@ public class ResourceManager {
         selection = new Texture("selection.png");
         posibles = new Texture("posibles.png");
         danger = new Texture("danger.png");
+        hint = new Texture("hint.png");
         selectionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/selected.wav"));
         moveSound = Gdx.audio.newSound(Gdx.files.internal("sounds/moved.wav"));
         comerSound = Gdx.audio.newSound(Gdx.files.internal("sounds/comer.mp3"));

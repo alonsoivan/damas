@@ -44,7 +44,9 @@ public class GameScreen implements Screen, InputProcessor {
     public static Casilla[][] casillasTablero = new Casilla[8][8];
     Array<Casilla> posibles;
     Array<Casilla> peligros;
-    Boolean selected;
+    boolean selected;
+
+    boolean comer;
 
     Array<int[]> hints = new Array<>();
 
@@ -126,17 +128,25 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
-    private void calcularPosibles() {
+    private void calcularPosibles(boolean comer ) {
+        this.comer = comer;
         posibles.clear();
         peligros.clear();
 
         if(piezasTablero[selecti][selectj].isDama())
+<<<<<<< HEAD
             movimientoDama();
         else
             movimientoNormal();
+=======
+            movimientoDama(comer);
+        else
+            movimientoNormal(comer);
+
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
     }
 
-    public void movimientoDama() {
+    public void movimientoDama(boolean comer) {
         int auxi = selecti;
         int auxj = selectj;
         boolean encontrado = false;
@@ -146,11 +156,18 @@ public class GameScreen implements Screen, InputProcessor {
         // Diagonal arriba izq
         while(--auxi >= 0 && --auxj >= 0 && !encontrado){
             if(piezasTablero[auxi][auxj] == null) {
+<<<<<<< HEAD
                 if (!existePosible(auxi, auxj)) {
                     if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
                         posibles.add(new Casilla(new Rectangle(), auxi, auxj, amenazas));
                 }
             }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+=======
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else
+                if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                     encontrado = true;
             else{
                     if(auxi -1 >= 0 && auxj -1 >= 0)
@@ -171,12 +188,19 @@ public class GameScreen implements Screen, InputProcessor {
         // Diagonal arriba der
         while(--auxi >= 0 && ++auxj <= 7 && !encontrado){
             if(piezasTablero[auxi][auxj] == null) {
+<<<<<<< HEAD
                 if (!existePosible(auxi, auxj)) {
                     if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
                         posibles.add(new Casilla(new Rectangle(), auxi, auxj,amenazas));
                 }
             }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                     encontrado = true;
+=======
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+                encontrado = true;
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
             else{
                 if(auxi -1 >= 0 && auxj +1 <= 7)
                     if(piezasTablero[auxi -1][auxj +1] == null){
@@ -195,12 +219,19 @@ public class GameScreen implements Screen, InputProcessor {
         // Diagonal abajo izq
         while(++auxi <= 7 && --auxj >= 0 && !encontrado){
             if(piezasTablero[auxi][auxj] == null) {
+<<<<<<< HEAD
                 if (!existePosible(auxi, auxj)) {
                     if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
                         posibles.add(new Casilla(new Rectangle(), auxi, auxj,amenazas));
                 }
             }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                     encontrado = true;
+=======
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+            }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
+                encontrado = true;
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
             else{
                 if(auxi +1 <=7 && auxj -1 >=0)
                     if(piezasTablero[auxi +1][auxj -1] == null){
@@ -217,12 +248,19 @@ public class GameScreen implements Screen, InputProcessor {
         auxj = selectj;
         encontrado = false;
         // Diagonal abajo der
+<<<<<<< HEAD
         while(++auxi <= 7 && ++auxj <= 7 && !encontrado) {
             if (piezasTablero[auxi][auxj] == null) {
                 if (!existePosible(auxi, auxj)) {
                     if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
                         posibles.add(new Casilla(new Rectangle(), auxi, auxj, amenazas));
                 }
+=======
+        while(++auxi <= 7 && ++auxj <= 7 && !encontrado){
+            if(piezasTablero[auxi][auxj] == null) {
+                if (!comer)
+                    posibles.add(new Casilla(new Rectangle(), auxi, auxj));
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
             }else if (piezasTablero[selecti][selectj].mismoColor(piezasTablero[auxi][auxj]))
                 encontrado = true;
             else{
@@ -237,6 +275,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+<<<<<<< HEAD
     public boolean existePosible(int i, int j){
         boolean existe = false;
         int iterator = 0;
@@ -249,6 +288,9 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public void movimientoNormal(){
+=======
+    public void movimientoNormal(boolean comer){
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
         int ajuste = 0;
 
         Array<int[]> amenazas = new Array<>();
@@ -263,7 +305,11 @@ public class GameScreen implements Screen, InputProcessor {
         }else {
             if (selectj > 0 && selectj < 7) {
                 if (piezasTablero[selecti + ajuste][selectj - 1] == null) {
+<<<<<<< HEAD
                     if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
+=======
+                    if(!comer)
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                         posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
                 } else {
                     // blancas comer IZQUIERDA
@@ -286,7 +332,11 @@ public class GameScreen implements Screen, InputProcessor {
                 }
                 amenazas.clear();
                 if (piezasTablero[selecti + ajuste][selectj + 1] == null) {
+<<<<<<< HEAD
                     if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
+=======
+                    if(!comer)
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                         posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
                 } else {
                     // blancas comer DERECHA
@@ -310,7 +360,11 @@ public class GameScreen implements Screen, InputProcessor {
             } else {
                 if (selectj == 0) {
                     if (piezasTablero[selecti + ajuste][selectj + 1] == null) {
+<<<<<<< HEAD
                         if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
+=======
+                        if(!comer)
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                             posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj + 1));
                     } else {
                         amenazas.clear();
@@ -335,7 +389,11 @@ public class GameScreen implements Screen, InputProcessor {
                 }
                 if (selectj == 7) {
                     if (piezasTablero[selecti + ajuste][selectj - 1] == null) {
+<<<<<<< HEAD
                         if(hints.isEmpty() || ( !hints.isEmpty() && !amenazas.isEmpty()))
+=======
+                        if(!comer)
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                             posibles.add(new Casilla(new Rectangle(), selecti + ajuste, selectj - 1));
                     } else {
                         amenazas.clear();
@@ -510,6 +568,7 @@ public class GameScreen implements Screen, InputProcessor {
                 if(piezasTablero[i][j] != null)
                     if(piezasTablero[i][j].getRect().contains(pulsacion)) {
 
+<<<<<<< HEAD
                         if(contTurno % 2 == 0 && piezasTablero[i][j].isWhite() || contTurno % 2 != 0 && piezasTablero[i][j].isBlack()) {
 
                             if(hints.isEmpty() || isHinted(i,j)){
@@ -519,6 +578,20 @@ public class GameScreen implements Screen, InputProcessor {
                                 selectionSound.play(0.7f);
                                 selected = true;
                                 calcularPosibles();
+=======
+                        if(!comer) {
+                            if (!selected || piezasTablero[selecti][selectj].mismoColor(piezasTablero[i][j])) {
+                                selecti = i;
+                                selectj = j;
+                                selected = false;
+                            }
+
+
+                            if (contTurno % 2 == 0 && piezasTablero[selecti][selectj].isWhite() || contTurno % 2 != 0 && piezasTablero[selecti][selectj].isBlack()) {
+                                selectionSound.play(0.7f);
+                                selected = true;
+                                calcularPosibles(false);
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                             }
                         }
                     }
@@ -557,6 +630,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                     selecti = casilla.getI();
                     selectj = casilla.getJ();
+<<<<<<< HEAD
 
                     if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0 ||
                             (piezasTablero[casilla.getI()][casilla.getJ()].isBlack() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 7))
@@ -568,6 +642,14 @@ public class GameScreen implements Screen, InputProcessor {
                         pasarTurno = false;
                     }
 
+=======
+                    calcularPosibles(true);
+                    if(peligros.size>0){
+                        selected = true;
+                        pasarTurno = false;
+                    }else
+                        comer = false;
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
                 }
 
                 if(piezasTablero[casilla.getI()][casilla.getJ()].isWhite() && piezasTablero[casilla.getI()][casilla.getJ()].getI() == 0 ||

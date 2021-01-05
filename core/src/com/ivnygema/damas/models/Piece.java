@@ -35,7 +35,11 @@ public class Piece extends Sprite {
     public void draw(SpriteBatch batch) {
         //super.draw(batch);
 
+<<<<<<< HEAD
         int movimiento;
+=======
+        int movimiento = 0;
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
 
         if (nuevaPos!=null) {
 
@@ -95,6 +99,12 @@ public class Piece extends Sprite {
         if(!dama) {
             this.dama = true;
 
+<<<<<<< HEAD
+=======
+        if(!this.dama) {
+            this.dama = true;
+
+>>>>>>> 528c675a19bfb20be7cd9028e52be827e5859f7d
             damaSound.play(0.7f);
 
             if (color.equals("n"))

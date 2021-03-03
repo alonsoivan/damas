@@ -32,10 +32,10 @@ public class Piece extends Sprite {
         this.j = j;
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, float dt) {
         //super.draw(batch);
 
-        int movimiento;
+        float movimiento;
 
         if (nuevaPos!=null) {
 
@@ -64,6 +64,11 @@ public class Piece extends Sprite {
     }
 
     public static Vector3 getScreenCoordinates(Rectangle rect){
+        Vector3 vec=new Vector3(rect.x,rect.y,0);
+        return GameScreen.camera.project(vec);
+    }
+
+    public static Vector3 getScreenCoordinates(Vector2 rect){
         Vector3 vec=new Vector3(rect.x,rect.y,0);
         return GameScreen.camera.project(vec);
     }

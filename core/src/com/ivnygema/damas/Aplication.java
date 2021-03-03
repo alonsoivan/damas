@@ -1,20 +1,23 @@
 package com.ivnygema.damas;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.ivnygema.damas.managers.ResourceManager;
-import com.ivnygema.damas.screens.MainScreen;
+import com.ivnygema.damas.models.AdsController;
+import com.ivnygema.damas.screens.SplashScreen;
 
 public class Aplication extends Game {
 
+	public static AdsController adService;
+
 	@Override
 	public void create () {
-
-		// Lanza la carga de recursos
-		ResourceManager.loadAllResources();
-
-		((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
+		this.setScreen(new SplashScreen(this));
+		//this.setScreen(new WinScreen("tu"));;
 	}
+
+	public Aplication(AdsController adService){
+		this.adService = adService;}
+
+	public Aplication(){};
 
 	@Override
 	public void render () {

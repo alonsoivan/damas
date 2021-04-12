@@ -34,7 +34,6 @@ public class ResourceManager {
     public static Texture fondo1;
     public static Texture fondo2;
 
-
     // SOUNDS
     public static Sound selectionSound;
     public static Sound moveSound;
@@ -54,7 +53,6 @@ public class ResourceManager {
         winSound = Gdx.audio.newSound(Gdx.files.internal("sounds/win.wav"));
         quitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/exit.wav"));
         resetSound = Gdx.audio.newSound(Gdx.files.internal("sounds/reset.wav"));
-
 
         blancasTexture = new Texture(Gdx.files.internal("blanca.png"),true);
         blancasTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

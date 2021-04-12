@@ -32,30 +32,48 @@ public class Piece extends Sprite {
         this.j = j;
     }
 
+    double vel;
     public void draw(SpriteBatch batch, float dt) {
         //super.draw(batch);
 
-        float movimiento;
-
         if (nuevaPos!=null) {
 
-            if(abs(nuevaPos.x - rect.x) >= 7)
-                movimiento = 5;
-            else
-                movimiento = 1;
+            System.out.println("distancia a recorrer: "+abs(nuevaPos.x - rect.x));
+            System.out.println("distancia 1 cuadrado: "+(64) );
+            // Movemos mas rapido a la dama cuando tiene que recorrer mayores distancias.
+            if(isDama() && (abs(nuevaPos.x - rect.x)) >= (64*1.5f)) {
+                vel = 850 * dt;
+                System.out.println("Velocidad absurda");
+            }else {
+                vel = 500 * dt;
+                System.out.println("Velocidad normal");
+            }
+
+            // Ajustamos la velocidad para que llegue suave
+            if(abs(nuevaPos.x - rect.x) < vel)
+                vel = 1;
+
+            // Si está lo suficientemente cerca, <1 pixel, hacemos tp
+            if(abs(nuevaPos.x - rect.x) < 1){
+                rect.x = nuevaPos.x;
+                rect.y = nuevaPos.y;
+            }
 
             if (nuevaPos.x > rect.x)
-                rect.x+=movimiento;
+                rect.x+=vel;
             if (nuevaPos.x < rect.x)
-                rect.x-=movimiento;
+                rect.x-=vel;
             if (nuevaPos.y > rect.y)
-                rect.y+=movimiento;
+                rect.y+=vel;
             if (nuevaPos.y < rect.y)
-                rect.y-=movimiento;
+                rect.y-=vel;
 
             if(nuevaPos.x == rect.x && nuevaPos.y == rect.y){
                 moveSound.play(0.7f);
                 nuevaPos = null;
+            }else {
+                System.out.println("NuevaPosX: "+nuevaPos.x+ " NuevaPosY: "+nuevaPos.y);
+                System.out.println("PosX: "+rect.x+" PosY: "+rect.y);
             }
         }
         super.setPosition(rect.x,rect.y);

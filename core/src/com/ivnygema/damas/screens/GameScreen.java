@@ -572,13 +572,17 @@ public class GameScreen implements Screen, InputProcessor {
             batch.draw(ResourceManager.posibles, casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY());
         }
 
+
         for(Casilla casilla: peligros){
             batch.draw(ResourceManager.danger, casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY());
         }
 
-        for(Casilla casilla: movibles){
-            batch.draw(ResourceManager.movibles, casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY());
-        }
+        if(!cpuGame || !isCpuTurn){
+            for(Casilla casilla: movibles){
+                batch.draw(ResourceManager.movibles, casillasTablero[casilla.getI()][casilla.getJ()].getRect().getX() ,casillasTablero[casilla.getI()][casilla.getJ()].getRect().getY());
+            }
+        }else
+            movibles.clear();
 
         if(selected)
             batch.draw(ResourceManager.selection,casillasTablero[selecti][selectj].rect.getX(),casillasTablero[selecti][selectj].rect.getY());

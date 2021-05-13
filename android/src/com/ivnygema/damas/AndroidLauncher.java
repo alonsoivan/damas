@@ -30,10 +30,11 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		config.useWakelock = true;
 		initialize(new Aplication(), config);
 
 		interstitialAd = new InterstitialAd(this);
-		//interstitialAd.setAdUnitId("ca-app-pub-1626440771794937/3657549539");
+		//interstitialAd.setAdUnitId("ca-app-pub-1626440771794937/8079042015");
 		interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // test
 
 
@@ -66,8 +67,8 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 		//adView.setAdSize(AdSize.FULL_BANNER);
 
 
-		//adView.setAdUnitId("ca-app-pub-1626440771794937/7811738345");
-		adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111"); // test
+		adView.setAdUnitId("ca-app-pub-1626440771794937/8079042015");
+		//adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111"); // test
 
 		MobileAds.initialize(this, new OnInitializationCompleteListener() {
 			@Override

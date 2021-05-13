@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.ivnygema.damas.managers.Animator;
 import com.ivnygema.damas.managers.ResourceManager;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
@@ -34,8 +35,12 @@ public class WinScreen implements Screen {
 
     Drawable up;
     Drawable down;
+
+    Animator animator;
     @Override
     public void show() {
+        animator = new Animator();
+        animator.create();
 
         if (!VisUI.isLoaded())
             VisUI.load();
@@ -79,7 +84,7 @@ public class WinScreen implements Screen {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = titleFont;
 
-        Label aboutLabel = new Label((ganador.equals("b")?"¡Rojas ":"¡Azules ")+"ganan!",labelStyle);
+        Label aboutLabel = new Label("VICTORY!",labelStyle);
         aboutLabel.setAlignment(Align.center);
 
         float width = Gdx.graphics.getWidth()*0.85f;
@@ -101,6 +106,8 @@ public class WinScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        animator.render();
 
         // Pinta la UI en la pantalla
         stage.act(delta);

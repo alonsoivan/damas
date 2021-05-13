@@ -42,6 +42,9 @@ public class MainScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
+    private Texture[] logos = new Texture[]{textureLogo1,textureLogo2,textureLogo3};
+    private int p = 1;
+
     @Override
     public void show() {
 
@@ -55,7 +58,10 @@ public class MainScreen implements Screen {
         camera.setToOrtho(false, widthS , heightS);
         camera.update();
 
-        float porcentajeBannerEnPantalla = Aplication.adService.getBannerHeight()/2 * 100 / Gdx.graphics.getHeight();
+
+        //float porcentajeBannerEnPantalla = Aplication.adService.getBannerHeight()/2 * 100 / Gdx.graphics.getHeight();
+
+
         //camera.position.y = casillasTablero[3][1].rect.y - camera.viewportHeight*((porcentajeBannerEnPantalla+0.5f)/100);
 
 
@@ -69,9 +75,8 @@ public class MainScreen implements Screen {
 
         stage = new Stage();
 
-        Texture textureLogo = new Texture(Gdx.files.internal("logo.png"),true);
-        textureLogo.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
-        VisImage logo = new VisImage(textureLogo);
+
+        final VisImage logo = new VisImage(logos[p-1]);
 
         VisTable table = new VisTable(true);
         //table.setFillParent(true);
@@ -87,13 +92,40 @@ public class MainScreen implements Screen {
         textButtonStyle.up = new TextureRegionDrawable(new TextureRegion(fondo1));
         textButtonStyle.down = new TextureRegionDrawable(new TextureRegion(fondo2));
 
+
+        TextButton bt1 = new TextButton("<",textButtonStyle);
+        bt1.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(0.7f);
+                changePieces("<");
+                logo.setDrawable(logos[p-1]);
+                //dispose();
+            }
+        });
+
+        final TextButton bt2 = new TextButton(">",textButtonStyle);
+        bt2.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(0.7f);
+                changePieces(">");
+                logo.setDrawable(logos[p-1]);
+                //dispose();
+            }
+        });
+
         TextButton playButton = new TextButton("PLAYER VS PLAYER",textButtonStyle);
         playButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickSound.play(0.7f);
+                ResourceManager.loadPieces(String.valueOf(p));
                 game.setScreen(new GameScreen(false,game));
+                //game.setScreen(new SnakeScreen());
                 dispose();
             }
         });
@@ -103,6 +135,7 @@ public class MainScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickSound.play(0.7f);
+                ResourceManager.loadPieces(String.valueOf(p));
                 game.setScreen(new GameScreen(true,game));
                 dispose();
             }
@@ -110,20 +143,36 @@ public class MainScreen implements Screen {
 
         float width = Gdx.graphics.getWidth()*0.85f;
         float height = Gdx.graphics.getHeight()*0.10f;
-        float pad = Gdx.graphics.getHeight()*0.030f;
+        float pad = Gdx.graphics.getHeight()*0.025f;
 
         float logoWidth = Gdx.graphics.getWidth()*0.75f;
 
-
+        //table.setSize(Gdx.graphics.getHeight(),width);
         // Añade filas a la tabla y añade los componentes
+        table.row().colspan(2);
+        table.add(logo).center().width(logoWidth).height(logoWidth).pad(pad*2f,pad,pad,pad);
         table.row();
-        table.add(logo).center().width(logoWidth).height(logoWidth).pad(pad*2.5f);
-        table.row();
+        table.add(bt1).center().width(height).height(height).pad(0,0,pad,0);
+        table.add(bt2).center().width(height).height(height).pad(0,0,pad,0);
+        table.row().colspan(2);
         table.add(playButton).center().width(width).height(height).pad(pad);
-        table.row();
+        table.row().colspan(2);
         table.add(configButton).center().width(width).height(height).pad(pad);
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    public void changePieces(String sign){
+        if(sign.equals("<"))
+            if(p == 1)
+                p = 3;
+            else
+                p--;
+        else
+            if(p == 3)
+                p = 1;
+            else
+                p++;
     }
 
     @Override

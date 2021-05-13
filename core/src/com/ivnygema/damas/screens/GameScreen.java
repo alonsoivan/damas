@@ -92,6 +92,7 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen(boolean cpuGame, Game game){
         this.cpuGame = cpuGame;
         this.game = game;
+
     }
 
     @Override

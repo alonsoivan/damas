@@ -27,7 +27,8 @@ public class SplashScreen implements Screen {
 
         Aplication.adService.showAds(false);
 
-        splashTexture = new Texture(Gdx.files.internal("logo.png"));
+
+        splashTexture = new Texture(Gdx.files.internal("logos/logo1.png"));
         splashImage = new Image(splashTexture);
         splashImage.setOrigin(width/2, width/2);
 

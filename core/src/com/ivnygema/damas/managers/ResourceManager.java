@@ -21,6 +21,9 @@ public class ResourceManager {
 
     public static AssetManager assets = new AssetManager();
 
+    public static Texture textureLogo1;
+    public static Texture textureLogo2;
+    public static Texture textureLogo3;
     public static Texture blancasTexture;
     public static Texture damabTexture;
     public static Texture damanTexture;
@@ -29,7 +32,6 @@ public class ResourceManager {
     public static Texture posibles;
     public static Texture movibles;
     public static Texture danger;
-    public static Texture hint;
     public static Texture quit;
     public static Texture fondo1;
     public static Texture fondo2;
@@ -54,17 +56,12 @@ public class ResourceManager {
         quitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/exit.wav"));
         resetSound = Gdx.audio.newSound(Gdx.files.internal("sounds/reset.wav"));
 
-        blancasTexture = new Texture(Gdx.files.internal("blanca.png"),true);
-        blancasTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-        damabTexture = new Texture(Gdx.files.internal("damab.png"),true);
-        damabTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-        damanTexture = new Texture(Gdx.files.internal("daman.png"),true);
-        damanTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-        negrasTexture = new Texture(Gdx.files.internal("negra.png"),true);
-        negrasTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        textureLogo1 = new Texture(Gdx.files.internal("logos/logo1.png"),true);
+        textureLogo1.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
+        textureLogo2 = new Texture(Gdx.files.internal("logos/logo2.png"),true);
+        textureLogo2.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
+        textureLogo3 = new Texture(Gdx.files.internal("logos/logo3.png"),true);
+        textureLogo3.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.MipMapLinearLinear);
 
         selection = new Texture(Gdx.files.internal("selection.png"),true);
         selection.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -77,9 +74,6 @@ public class ResourceManager {
 
         danger = new Texture(Gdx.files.internal("danger.png"),true);
         danger.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-        hint = new Texture(Gdx.files.internal("hint.png"),true);
-        hint.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         quit = new Texture(Gdx.files.internal("quit.png"),true);
         quit.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -96,6 +90,21 @@ public class ResourceManager {
         parameter.color = Color.WHITE;
 
         titleFont = generator.generateFont(parameter);
+    }
+
+    public static void loadPieces(String p){
+        String path = "piezas/p"+p+"/";
+        blancasTexture = new Texture(Gdx.files.internal(path+"blanca.png"),true);
+        blancasTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        damabTexture = new Texture(Gdx.files.internal(path+"damab.png"),true);
+        damabTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        damanTexture = new Texture(Gdx.files.internal(path+"daman.png"),true);
+        damanTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        negrasTexture = new Texture(Gdx.files.internal(path+"negra.png"),true);
+        negrasTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     /** Actualiza la carga de recursos */
